@@ -75,7 +75,7 @@ public abstract class DbDialect {
     this.escapeEnd = escapeEnd;
   }
 
-  public final String getInsert(final String tableName, final Collection<String> keyColumns, final Collection<String> nonKeyColumns) {
+  public String getInsert(final String tableName, final Collection<String> keyColumns, final Collection<String> nonKeyColumns) {
     StringBuilder builder = new StringBuilder("INSERT INTO ");
     builder.append(escaped(tableName));
     builder.append("(");
@@ -254,6 +254,10 @@ public abstract class DbDialect {
     if (url.startsWith("jdbc:sap")) {
       // HANA url's are in the format : jdbc:sap://$host:3(instance)(port)/
       return new HanaDialect();
+    }
+
+    if (url.startsWith("jdbc:phoenix")) {
+      return new PhoenixDialect();
     }
 
     final String protocol = extractProtocolFromUrl(url).toLowerCase();
